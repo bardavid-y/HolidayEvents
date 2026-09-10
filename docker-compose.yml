@@ -3,7 +3,7 @@ services:
     image: holledy-app:latest
     build:
       context: .
-    container_name: holledy
+    container_name: holledy_web
     ports:
       - "3000:3000"
     restart: unless-stopped
