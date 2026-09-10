@@ -24,9 +24,9 @@ pipeline {
             steps {
                 echo "deploy the new version"
                 sh '''
-                    docker stop holiday_class || true
-                    docker rm holiday_class || true
-                    docker run -d --name holiday_class -p 3000:3000 holiday_jenkins:latest
+                    docker stop HolidayEvents || true
+                    docker rm HolidayEvents || true
+                    docker run -d --name HolidayEvents -p 3000:3000 holiday_jenkins:latest
                 '''
             }
         }
