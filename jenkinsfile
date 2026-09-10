@@ -7,30 +7,36 @@ pipeline {
                 checkout scm
             }
         }
-    }
         stage('install') {
             steps {
-                echo "installing dependecies"
+                echo "installing dependencies"
                 sh "npm ci"
             }
         }
         stage('build and push') {
             steps {
                 echo "building docker image and pushing"
-                sh 'docker build -t holiday-class/${JOB_NAME}:${BUILD_NUMBER}'
+                // Added a dot '.' at the end so Docker knows where the build context is
+                sh 'docker build -t holiday-class/${JOB_NAME}:${BUILD_NUMBER} .'
             }
         }
         stage('deploy') {
             steps {
                 echo "deploy the new version"
                 sh '''
+                    docker stop holiday_class || true
                     docker rm holiday_class || true
                     docker run -d --name holiday_class -p 3000:3000 holiday_jenkins:latest
                 '''
             }
         }
-        post {
-            success { echo "CICD poiplene deployment successfuly" }
-            failure { echo "Failed to deploy" }
+    } // This closes the 'stages' block properly
+    post {
+        success { 
+            echo "CI/CD pipeline deployment successful" 
         }
+        failure { 
+            echo "Failed to deploy" 
+        }
+    }
 }
