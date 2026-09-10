@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo "building docker image and pushing"
                 // Added a dot '.' at the end so Docker knows where the build context is
-                sh 'docker build -t holiday-class/${JOB_NAME}:${BUILD_NUMBER} .'
+                sh 'docker build -t HolidayEvents/${JOB_NAME}:${BUILD_NUMBER} .'
             }
         }
         stage('deploy') {
