@@ -22,12 +22,18 @@ pipeline {
         stage('deploy') {
             steps {
                 echo "deploy the new version"
-                // Changed to triple double-quotes (""") to allow ${BUILD_NUMBER} to work
                 sh """
-                    docker stop HolidayEvents || true
-                    docker rm HolidayEvents || true
-                    # Updated to exactly match the built image tag
+                    # 1. Find and force-kill ANY container currently holding port 3000
+                    docker ps -q --filter "publish=3000" | xargs -r docker rm -f || true
+                    
+                    # 2. Force-remove the specific HolidayEvents container just in case
+                    docker rm -f HolidayEvents || true
+                    
+                    # 3. Run the new container on port 3000:3000
                     docker run -d --name HolidayEvents -p 3000:3000 HolidayEvents/holiday-jenkins:${BUILD_NUMBER}
+                    
+                    # 4. Destroy old, dangling Docker images to free up disk space
+                    docker image prune -f
                 """
             }
         }
