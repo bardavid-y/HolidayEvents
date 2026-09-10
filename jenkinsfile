@@ -15,22 +15,23 @@ pipeline {
         }
         stage('build and push') {
             steps {
-                echo "building docker image and pushing"
-                // Added a dot '.' at the end so Docker knows where the build context is
-                sh 'docker build -t HolidayEvents/${JOB_NAME}:${BUILD_NUMBER} .'
+                echo 'building docker image and pushing'
+                sh "docker build -t HolidayEvents/holiday-jenkins:${BUILD_NUMBER} ."
             }
         }
         stage('deploy') {
             steps {
                 echo "deploy the new version"
-                sh '''
+                // Changed to triple double-quotes (""") to allow ${BUILD_NUMBER} to work
+                sh """
                     docker stop HolidayEvents || true
                     docker rm HolidayEvents || true
-                    docker run -d --name HolidayEvents -p 3000:3000 holiday_jenkins:latest
-                '''
+                    # Updated to exactly match the built image tag
+                    docker run -d --name HolidayEvents -p 3000:3000 HolidayEvents/holiday-jenkins:${BUILD_NUMBER}
+                """
             }
         }
-    } // This closes the 'stages' block properly
+    } 
     post {
         success { 
             echo "CI/CD pipeline deployment successful" 
