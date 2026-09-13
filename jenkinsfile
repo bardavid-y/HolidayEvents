@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         // Change this to your actual Docker Hub username (all lowercase)
-        DOCKER_HUB_USER = 'bardavi'
+        DOCKER_HUB_USER = 'bardavid'
         IMAGE_NAME      = "${DOCKER_HUB_USER}/holiday-events"
     }
     stages {
