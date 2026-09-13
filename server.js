@@ -124,6 +124,14 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "Unexpected server error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server started on port ${PORT}`);
+// });
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+  });
+}
+
+// This allows your test file to import 'app'
+module.exports = app;

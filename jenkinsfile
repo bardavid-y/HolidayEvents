@@ -13,6 +13,13 @@ pipeline {
                 sh "npm ci"
             }
         }
+        stage('test') {
+            steps {
+                echo "running automated tests"
+                sh "npm ci"       // Install Mocha/Chai or Supertest
+                sh "npm run test" // Executes the script from package.json
+            }
+        }
         stage('build and push') {
             steps {
                 echo 'building docker image and pushing'
