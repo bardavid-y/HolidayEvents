@@ -24,6 +24,12 @@ pipeline {
                 sh "npm run test"
             }
         }
+        stage('test connection') {
+        steps {
+            echo "Testing SSH connection to Proxmox Ansible server..."
+            sh 'ssh -o StrictHostKeyChecking=no yossi@192.168.1.121> "echo \'SUCCESS: Connected to Proxmox\' && uptime"'
+            }
+        }
         stage('build and push') {
             steps {
                 echo 'Building and pushing Docker image to Docker Hub'
