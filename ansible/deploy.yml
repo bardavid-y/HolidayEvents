@@ -1,0 +1,25 @@
+---
+- name: Deploy Holiday Events to Ubuntu Servers
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Pull the updated Docker image
+      community.docker.docker_image:
+        name: "bardavid/holiday-events:{{ image_tag }}"
+        source: pull
+
+    - name: Run the application container
+      community.docker.docker_container:
+        name: HolidayEvents
+        image: "bardavid/holiday-events:{{ image_tag }}"
+        state: started
+        restart_policy: always
+        recreate: yes
+        published_ports:
+          - "3000:3000"
+
+    - name: Clean up dangling images
+      community.docker.docker_prune:
+        images: yes
+        images_filters:
+          dangling: true
