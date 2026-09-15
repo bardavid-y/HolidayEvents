@@ -1,0 +1,18 @@
+stage('deploy') {
+            steps {
+                echo "deploy the new version"
+                sh """
+                    # 1. Kill any container currently occupying port 3000
+                    docker ps -q --filter "publish=3000" | xargs -r docker rm -f || true
+                    
+                    # 2. Remove any existing container named HolidayEvents
+                    docker rm -f HolidayEvents || true
+                    
+                    # 3. Run the container matching the exact image pushed to Docker Hub
+                    docker run -d --name HolidayEvents -p 3000:3000 ${IMAGE_NAME}:${BUILD_NUMBER}
+                    
+                    # 4. Clean up dangling images
+                    docker image prune -f
+                """
+            }
+        }

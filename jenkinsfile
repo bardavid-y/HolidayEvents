@@ -42,19 +42,15 @@ pipeline {
         }
         stage('deploy') {
             steps {
-                echo "deploy the new version"
+                echo "Transferring Ansible files to Proxmox server..."
+                // 1. Copy the playbook and inventory to the Proxmox VM's home directory
+                sh "scp -o StrictHostKeyChecking=no deploy.yml ansible/inventory.ini yossi@192.168.1.121>:~/"
+                
+                echo "Triggering remote Ansible deployment..."
+                // 2. SSH into the VM and execute the playbook with the new build tag
                 sh """
-                    # 1. Kill any container currently occupying port 3000
-                    docker ps -q --filter "publish=3000" | xargs -r docker rm -f || true
-                    
-                    # 2. Remove any existing container named HolidayEvents
-                    docker rm -f HolidayEvents || true
-                    
-                    # 3. Run the container matching the exact image pushed to Docker Hub
-                    docker run -d --name HolidayEvents -p 3000:3000 ${IMAGE_NAME}:${BUILD_NUMBER}
-                    
-                    # 4. Clean up dangling images
-                    docker image prune -f
+                    ssh -o StrictHostKeyChecking=no ansible/yossi@192.168.1.121> \
+                    'ansible-playbook -i ~/inventory.ini ~/deploy.yml -e "image_tag=${BUILD_NUMBER}"'
                 """
             }
         }
