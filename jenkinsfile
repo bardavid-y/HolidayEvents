@@ -49,7 +49,7 @@ pipeline {
                 echo "Triggering remote Ansible deployment..."
                 // 2. SSH into the VM and execute the playbook with the new build tag
                 sh """
-                    ssh -o StrictHostKeyChecking=no ansible/yossi@192.168.1.121> \
+                    ssh -o StrictHostKeyChecking=no yossi@192.168.1.121> \
                     'ansible-playbook -i ~/inventory.ini ~/deploy.yml -e "image_tag=${BUILD_NUMBER}"'
                 """
             }
