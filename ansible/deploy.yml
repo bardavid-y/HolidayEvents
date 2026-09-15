@@ -3,6 +3,22 @@
   hosts: app_servers
   become: yes
   tasks:
+    # --- 1. SETUP PREREQUISITES ---
+    - name: Install Docker and Python Docker SDK
+      ansible.builtin.apt:
+        name: 
+          - docker.io
+          - python3-docker
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running and enabled
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    # --- 2. DEPLOY APPLICATION ---
     - name: Pull the updated Docker image
       community.docker.docker_image:
         name: "bardavid/holiday-events:{{ image_tag }}"
