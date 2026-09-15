@@ -1,5 +1,6 @@
 
 GITHUB : https://github.com/bardavid-y/HolidayEvents
+חשוב לציין שאת כול הפרויקט בחרתי לבנות בשרת promox שמריץ את השרתים בסביבה הדומה ביותר ל מציאות  
 
 # Holiday Events - CI/CD DevOps Pipeline
 פרויקט זה מדגים אוטומציה מלאה של פיתוח ופריסה (CI/CD) לאפליקציית Node.js, משלב כתיבת הקוד ועד להרצת הקונטיינרים על שרתי היעד באמצעות Jenkins ו-Ansible.
